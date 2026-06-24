@@ -74,8 +74,8 @@ function guardarInventores(datos, fechaEnvio) {
     // Si la pestaña no existe, crearla
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_PERSONAS);
-      // Agregar encabezados
-      sheet.appendRow(['Fecha de Envío', 'Título de la Invención', 'Apellidos', 'Nombres', 'DNI', 'Género']);
+      // Agregar encabezados (sin Género)
+      sheet.appendRow(['Fecha de Envío', 'Título de la Invención', 'Apellidos', 'Nombres', 'Edad', 'Grado']);
     }
     
     const fecha = fechaEnvio || Utilities.formatDate(new Date(), 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
@@ -89,8 +89,8 @@ function guardarInventores(datos, fechaEnvio) {
           titulo,
           inventor.apellidos || '',
           inventor.nombres || '',
-          inventor.dni || '',
-          inventor.genero || ''
+          inventor.edad || '',
+          inventor.grado || ''
         ];
         sheet.appendRow(fila);
       }
@@ -156,9 +156,8 @@ function guardarDatos(datos) {
       fichaPostulanteUrl,
       fichaInvencionUrl,
       datos.descripcion || '',
-      datos.tiempoFormulario || '',
-      datos.declaracion1 === true ? 'Si' : 'No',
-      datos.declaracion2 === true ? 'Si' : 'No'
+      datos.autorizacionContacto || '',
+      datos.tiempoFormulario || ''
     ];
     
     // Guardar inventores en la pestaña Personas
@@ -310,6 +309,7 @@ function validarDatos(datos) {
   const camposRequeridos = [
     'titulo',
     'categoriaParticipacion',
+    'autorizacionContacto',
     'institucionEducativa',
     'direccionInstitucion',
     'regionInstitucion',
@@ -327,14 +327,16 @@ function validarDatos(datos) {
   
   // Validar campos de texto adicionales
 
-  // Validar declaraciones obligatorias
-  if (datos.declaracion1 !== true || datos.declaracion2 !== true) {
-    return { valido: false, error: 'Debe aceptar las dos declaraciones obligatorias' };
-  }
+  // (Las declaraciones obligatorias fueron removidas del formulario)
 
   // Validar categoría de participación (A o B)
   if (!datos.categoriaParticipacion || !['A', 'B'].includes(datos.categoriaParticipacion)) {
     return { valido: false, error: 'Categoría de participación inválida' };
+  }
+
+  // Validar autorización de contacto (Si o No)
+  if (!datos.autorizacionContacto || !['Si', 'No'].includes(datos.autorizacionContacto)) {
+    return { valido: false, error: 'Autorización de contacto inválida' };
   }
   
   // Verificar honeypot
@@ -349,6 +351,22 @@ function validarDatos(datos) {
   
   if (datos.fichaInvencionBase64 && datos.fichaInvencionBase64.length > SECURITY_CONFIG.MAX_FILE_SIZE * 1.4) {
     return { valido: false, error: 'Archivo de ficha invención muy grande' };
+  }
+  
+  // Validar inventores: al menos 1 y campos requeridos por inventor
+  if (!datos.inventores || !Array.isArray(datos.inventores) || datos.inventores.length === 0) {
+    return { valido: false, error: 'Debe agregar al menos 1 inventor' };
+  }
+
+  for (const inventor of datos.inventores) {
+    if (!inventor.apellidos || !inventor.nombres || !inventor.edad || !inventor.grado) {
+      return { valido: false, error: 'Cada inventor debe tener apellidos, nombres, edad y grado' };
+    }
+    // Validar edad como entero positivo
+    const edadNum = parseInt(inventor.edad, 10);
+    if (isNaN(edadNum) || edadNum <= 0) {
+      return { valido: false, error: `Edad de inventor inválida: ${inventor.edad}` };
+    }
   }
   
   return { valido: true };
