@@ -1,0 +1,1360 @@
+<style>
+  .form-concurso {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .form-concurso .form-group {
+    margin-bottom: 15px;
+  }
+  .form-concurso label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  .form-concurso input,
+  .form-concurso select,
+  .form-concurso textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .form-concurso input[type="file"] {
+    padding: 8px;
+  }
+  .form-concurso .btn-submit {
+    background-color: #0073aa;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+  .form-concurso .btn-submit:hover {
+    background-color: #005a87;
+  }
+  .form-concurso .btn-submit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .form-concurso .mensaje {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+    display: none;
+  }
+  .form-concurso .mensaje.exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  .form-concurso .mensaje.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  .form-concurso .required::after {
+    content: " *";
+    color: red;
+  }
+  .form-concurso select:invalid,
+  .form-concurso input:invalid {
+    border-color: #ccc;
+  }
+  .form-concurso select:invalid:focus,
+  .form-concurso input:invalid:focus {
+    border-color: #dc3545;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+  }
+  .form-concurso.was-validated select:invalid,
+  .form-concurso.was-validated input:invalid {
+    border-color: #dc3545;
+    background-color: #fff8f8;
+  }
+  .form-concurso .loader {
+    display: none;
+    text-align: center;
+    margin: 10px 0;
+  }
+  .form-concurso .form-step {
+    display: none;
+  }
+  .form-concurso .form-step.activo {
+    display: block;
+  }
+  .form-concurso .step-title {
+    margin: 0 0 8px;
+    color: #1f3d52;
+  }
+  .form-concurso .section-intro {
+    margin: 0 0 18px;
+    color: #4d4d4d;
+    line-height: 1.45;
+    text-align: justify;
+  }
+  .form-concurso .field-help {
+    margin: 0 0 8px;
+    color: #4d4d4d;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .form-concurso .step-actions {
+    margin-top: 10px;
+  }
+  .form-concurso .step-actions.multiple {
+    display: flex;
+    gap: 10px;
+  }
+  .form-concurso .btn-next {
+    background-color: #0073aa;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+  .form-concurso .btn-next:hover {
+    background-color: #005a87;
+  }
+  .form-concurso .btn-back {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+  .form-concurso .btn-back:hover {
+    background-color: #5a6268;
+  }
+  .form-concurso .step-actions.multiple .btn-next,
+  .form-concurso .step-actions.multiple .btn-back,
+  .form-concurso .step-actions.multiple .btn-submit {
+    width: auto;
+    flex: 1;
+  }
+  .form-concurso [data-step="4"] .form-group > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .form-concurso [data-step="4"] input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin-top: 3px;
+    flex: 0 0 auto;
+  }
+  .form-concurso [data-step="4"] .form-group > div label {
+    display: inline;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+  
+  /* Estilos de Inventores */
+  .form-concurso .inventores-section {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #0073aa;
+    border-radius: 4px;
+  }
+  .form-concurso .inventores-section h4 {
+    margin: 0 0 15px 0;
+    color: #1f3d52;
+    font-size: 16px;
+  }
+  .form-concurso .inventores-container {
+    margin-bottom: 15px;
+  }
+  .form-concurso .inventor-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    position: relative;
+  }
+  .form-concurso .inventor-item h5 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 14px;
+  }
+  .form-concurso .inventor-item .form-group {
+    margin-bottom: 10px;
+  }
+  .form-concurso .inventor-item .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .form-concurso .inventor-item .form-row.full {
+    grid-template-columns: 1fr;
+  }
+  .form-concurso .btn-remove-inventor {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .form-concurso .btn-remove-inventor:hover {
+    background-color: #c82333;
+  }
+  .form-concurso #inventoresContainer .inventor-item:first-child .btn-remove-inventor {
+    display: none;
+  }
+  .form-concurso .btn-add-inventor {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+  }
+  .form-concurso .btn-add-inventor:hover {
+    background-color: #218838;
+  }
+  .form-concurso .btn-add-inventor:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Estilos del Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-overlay.activo {
+    display: flex;
+  }
+  .modal-contenido {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  .modal-contenido.exito {
+    border-top: 5px solid #28a745;
+  }
+  .modal-contenido.error {
+    border-top: 5px solid #dc3545;
+  }
+  .modal-contenido.cargando {
+    border-top: 5px solid #0073aa;
+  }
+  .modal-contenido h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  .modal-contenido.exito h2 {
+    color: #28a745;
+  }
+  .modal-contenido.error h2 {
+    color: #dc3545;
+  }
+  .modal-contenido.cargando h2 {
+    color: #0073aa;
+  }
+  .modal-contenido p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .modal-contenido .hora-envio {
+    font-size: 14px;
+    color: #888;
+    margin-top: 15px;
+  }
+  .modal-contenido .btn-cerrar {
+    background-color: #0073aa;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px auto 0;
+    display: block;
+  }
+  .modal-contenido .btn-cerrar:hover {
+    background-color: #005a87;
+  }
+  
+  /* Spinner de carga */
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0073aa;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+
+<div class="form-concurso">
+  <form id="formConcurso">
+    <!-- Campo honeypot (oculto para humanos, visible para bots) -->
+    <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+      <label for="honeypot">No llenar este campo</label>
+      <input type="text" id="honeypot" name="honeypot" tabindex="-1" autocomplete="off">
+    </div>
+
+    <section class="form-step activo" data-step="1">
+      <h3 class="step-title" style="display:none;">Delegación Perú / Pre-Inscripción KIWIE 2026</h3>
+      <div class="section-intro" style="display:none;">
+        <p>El Indecopi convoca a inventoras peruanas con patente en trámite o concedida para representar al Perú en la Korea International Women's Invention Exposition - KIWIE 2026, que se llevará a cabo del 16 al 18 de julio de 2026.</p>
+        
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="institucionEducativa">Nombre de la institución educativa</label>
+        <input type="text" id="institucionEducativa" name="institucionEducativa" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="direccionInstitucion">Dirección completa de la institución educativa</label>
+        <input type="text" id="direccionInstitucion" name="direccionInstitucion" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="regionInstitucion">Región a la cual pertenece la institución educativa</label>
+        <select id="regionInstitucion" name="regionInstitucion" required>
+          <option value="">Seleccione...</option>
+          <option value="Amazonas">Amazonas</option>
+          <option value="Áncash">Áncash</option>
+          <option value="Apurímac">Apurímac</option>
+          <option value="Arequipa">Arequipa</option>
+          <option value="Ayacucho">Ayacucho</option>
+          <option value="Cajamarca">Cajamarca</option>
+          <option value="Callao">Callao</option>
+          <option value="Cusco">Cusco</option>
+          <option value="Huancavelica">Huancavelica</option>
+          <option value="Huánuco">Huánuco</option>
+          <option value="Ica">Ica</option>
+          <option value="Junín">Junín</option>
+          <option value="La Libertad">La Libertad</option>
+          <option value="Lambayeque">Lambayeque</option>
+          <option value="Lima">Lima</option>
+          <option value="Loreto">Loreto</option>
+          <option value="Madre de Dios">Madre de Dios</option>
+          <option value="Moquegua">Moquegua</option>
+          <option value="Pasco">Pasco</option>
+          <option value="Piura">Piura</option>
+          <option value="Puno">Puno</option>
+          <option value="San Martín">San Martín</option>
+          <option value="Tacna">Tacna</option>
+          <option value="Tumbes">Tumbes</option>
+          <option value="Ucayali">Ucayali</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="apellidosRepresentante">Apellidos del Representante</label>
+        <input type="text" id="apellidosRepresentante" name="apellidosRepresentante" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="nombreRepresentante">Nombres del Representante</label>
+        <input type="text" id="nombreRepresentante" name="nombreRepresentante" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" maxlength="8"
+               pattern="[0-9]{8}"
+               title="El DNI debe contener 8 dígitos"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+               required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono"
+               pattern="[0-9+\-]{7,15}"
+               title="El teléfono debe contener al menos 7 dígitos"
+               oninput="this.value = this.value.replace(/[^0-9+\-]/g, '')"
+               required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="correo">Correo Electrónico</label>
+        <input type="email" id="correo" name="correo"
+               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+               title="Ingrese un correo electrónico válido (ejemplo: usuario@dominio.com)"
+               required>
+      </div>
+
+      
+
+      <div class="step-actions">
+        <button type="button" class="btn-next" id="btnContinuar1">Continuar</button>
+      </div>
+    </section>
+
+    <section class="form-step" data-step="2">
+      <h3 class="step-title">Formato de inscripción</h3>
+      <p class="section-intro">A continuación se encuentra el formato de postulación, descárguelo y complételo adecuadamente. Se le solicitará una fotografía en buena resolución que será usada para la publicación de la invención.</p>
+      <div class="form-group">
+        <label class="required">Categoría de participación</label>
+        <div style="margin-left:8px;">
+          <div style="margin-bottom:6px;">
+            <input type="radio" id="categoriaA" name="categoriaParticipacion" value="A" required>
+            <label for="categoriaA" style="display:inline; font-weight: normal;">Categoría A (4to de primaria a 1ero de secundaria)</label>
+          </div>
+          <div>
+            <input type="radio" id="categoriaB" name="categoriaParticipacion" value="B">
+            <label for="categoriaB" style="display:inline; font-weight: normal;">Categoría B (2do de secundaria a 5to de secundaria)</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="inventores-section">
+        <h4 class="required">Inventores</h4>
+        <p class="field-help">Ingrese la información de los inventores (mínimo 1).</p>
+        <div class="inventores-container" id="inventoresContainer">
+          <!-- Inventores dinámicos se agregarán aquí -->
+        </div>
+        <button type="button" class="btn-add-inventor" id="btnAddInventor">+ Agregar Inventor</button>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="fichaPostulante">Formato de Inscripción</label>
+        <p class="field-help"><a href="https://www.patenta.pe/wp-content/uploads/2026/05/iCAN2026-APPLICATION-FORM.docx"><u>Descargue</u></a>, complete, guarde en Formato PDF</p>
+        <p class="field-help">Complete 1 formulario por cada invención.</p>
+        <p class="field-help">No acumule archivos PDF.</p>
+        <p class="field-help">Tamaño máximo: 10 MB.</p>
+        <input type="file" id="fichaPostulante" name="fichaPostulante" accept=".pdf" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="fichaInvencion">Fotografía 1</label>
+        <p class="field-help">Ingrese una primera fotografía de la invención. Esta será utilizada en la publicación en línea y será promocionada para su calificación. Procure utilizar una cámara de buena resolución y buena iluminación, o en su defecto diseño gráfico o asistido por computadora.</p>
+        <p class="field-help">Sube 1 archivo compatible: imagen. Tamaño máximo: 10 MB.</p>
+        <input type="file" id="fichaInvencion" name="fichaInvencion" accept=".jpg,.jpeg,.png,.webp" required>
+      </div>
+
+      <div class="step-actions multiple">
+        <button type="button" class="btn-back" id="btnAtras2">Atras</button>
+        <button type="button" class="btn-next" id="btnContinuar2">Continuar</button>
+      </div>
+    </section>
+
+    <section class="form-step" data-step="3">
+      <h3 class="step-title">Información relevante de la Invención y su identificación</h3>
+      <p class="section-intro">Registre los datos técnicos del proyecto: título, expediente y descripción.</p>
+
+      <div class="form-group">
+        <label class="required" for="titulo">Título de la invención o Diseño (español)</label>
+        <p class="field-help">Indique el título de la invención o diseño de acuerdo a como aparece en la solicitud o registro otorgado.</p>
+        <input type="text" id="titulo" name="titulo" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="required" for="descripcion">Descripción de la Invención</label>
+        <p class="field-help">Describa claramente en qué consiste la invención y qué problema busca resolver que la haga diferente a otros productos/procedimientos, así como su impacto social, económico o comercial. Puede usar la misma descripción que la del formulario de inscripción. Esta descripción será utilizada para emitir notas de prensa o producir contenido para la difusión de la participación de la delegación.</p>
+        <textarea id="descripcion" name="descripcion" rows="5" minlength="300" required></textarea>
+      </div>
+
+      <div class="step-actions multiple">
+        <button type="button" class="btn-back" id="btnAtras3">Atras</button>
+        <button type="button" class="btn-next" id="btnContinuar3">Continuar</button>
+      </div>
+    </section>
+
+    <section class="form-step" data-step="4">
+      <h3 class="step-title">Conocimiento informado del procedimiento de participación en la ICAN 2026</h3>
+      <div class="section-intro" style="display:none !important;">
+        <p><strong>Procedimiento de participación:</strong></p>
+        <p>1) Pre-Inscripción - hasta el 11 de mayo de 2026: Fecha límite para completar este formulario.</p>
+        <p>2) Preparación de la inscripción a KIWIE - hasta el 15 de mayo: De estar conforme la información de su pre-inscripción, el Indecopi se pondrá en contacto con usted para agruparla junto con otras 2 inventoras para formar una terna (por lo menos), y así inscribirse en conjunto para participar en la KIWIE 2026.</p>
+        <p>3) Inscripción de la Delegación Peruana - hasta el 15 de mayo: El Indecopi, en nombre de todas las participantes, realizará la inscripción de la delegación con los organizadores. Esta fase no incluye aún el pago por concepto de inscripción.</p>
+        <p>4) Confirmación de la inscripción 5 a 10 días útiles a partir de la inscripción: Los organizadores de la KIWIE 2026 evaluarán y confirmarán la inscripción de la delegación. A partir de las invenciones aceptadas a participar se calculará el pago a realizar.</p>
+        <p>5) Pago de inscripción y envío de vídeos de exposición - 20 de mayo, la fecha será comunicada de acuerdo con la organización de Kiwie 2026: La delegación realizará la recaudación de $100+ITF ($60)=$160 o $400+ITF ($240), que serán cubiertos conjuntamente por las inventoras que conformen cada terna designada por el Indecopi. El Indecopi coordinará activamente con la delegación para hacer efectivo el pago de la inscripción en beneficio de todas las participantes. En caso de que el monto resulte diferente de lo calculado por cuestiones aritméticas, se comunicará oportunamente a las pre-inscritas para completar o devolver la diferencia.</p>
+        <p>6) (Opcionalmente): Las inventoras que se inscriban para viajar y participar presencialmente, deberán comunicárselo al Indecopi oportunamente a través del presente formulario, de esta manera se conformará una delegación de participación física, donde aplicarán otras reglas de inscripción, las cuales se comunicarán a la delegación física oportunamente.</p>
+        <p>7) Exposición del 16 al 18 de julio de 2026 (3 días): El Jurado evaluador revisará la exposición dentro del local de la KIWIE 2026. La descripción, las fotografías y el video explicativo servirán para evaluar las invenciones.</p>
+        <p>8) Los resultados y reconocimientos serán comunicados al Indecopi. El Indecopi se asegurará de difundir los resultados de la participación de la Delegación a través de notas de prensa y entrevistas a las inventoras participantes como parte de su función como entidad coordinadora.</p>
+        <p>9) Los organizadores de KIWIE 2026 enviarán al Indecopi los diplomas de participación, medallas o reconocimientos que las inventoras hayan obtenido como parte de su participación en la Exhibición. El Indecopi informará y trasladará el monto que se requiera para el proceso de desaduanaje del paquete enviado a todas las participantes de manera proporcional. El Indecopi se hará cargo de hacer entrega de estos materiales previa coordinación con las inventoras y/o de programar un evento de reconocimiento para la entrega y divulgación de los resultados.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="required">Declaro que acepto conocer que la participación en la ICAN 2026, como parte de la delegación peruana, implica los siguientes puntos, marque en señal de aceptación y entendimiento que debe:</label>
+        <div style="margin-bottom: 10px;">
+          <input type="checkbox" id="declaracion1" name="declaracion1" required>
+          <label for="declaracion1" style="display: inline; font-weight: normal;">Pagar la tasa de participación en coordinación con la delegación y el Indecopi.</label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <input type="checkbox" id="declaracion2" name="declaracion2" required>
+          <label for="declaracion2" style="display: inline; font-weight: normal;">De ser declarado Finalista, coordinar con el Indecopi para presentar un video explicativo de la invención/diseño para participar en la etapa final (hasta el 10 de agosto de 2025).</label>
+        </div>
+      </div>
+
+      <div class="step-actions multiple">
+        <button type="button" class="btn-back" id="btnAtras4">Atras</button>
+        <button type="submit" class="btn-submit" id="btnSubmit">Enviar Formulario</button>
+      </div>
+    </section>
+
+    <div class="loader" id="loader">
+      <p>Enviando formulario, por favor espere...</p>
+    </div>
+
+  </form>
+  <div class="mensaje" id="mensaje"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-contenido" id="modalContenido">
+    <h2 id="modalTitulo"></h2>
+    <div class="spinner" id="modalSpinner" style="display: none;"></div>
+    <p id="modalMensaje"></p>
+    <p class="hora-envio" id="modalHora"></p>
+    <button class="btn-cerrar" id="btnCerrarModal">Cerrar</button>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  // Variables de seguridad
+  let formularioToken = null;
+  let tiempoInicioFormulario = new Date().getTime();
+  let intentosEnvio = 0;
+  const MAX_INTENTOS = 100;
+  
+  // URL del Web App de Google Apps Script (reemplazar con tu URL)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqe1ewpjcStGFHKoZiKmkJUuyNOn_vhq4_UX7eiiZ71jP7JUsO0PTRxQ-5OqYgW54Zpg/exec';
+
+  const form = document.getElementById('formConcurso');
+  const mensaje = document.getElementById('mensaje');
+  const loader = document.getElementById('loader');
+  const btnSubmit = document.getElementById('btnSubmit');
+  const btnContinuar1 = document.getElementById('btnContinuar1');
+  const btnContinuar2 = document.getElementById('btnContinuar2');
+  const btnContinuar3 = document.getElementById('btnContinuar3');
+  const btnAtras2 = document.getElementById('btnAtras2');
+  const btnAtras3 = document.getElementById('btnAtras3');
+  const btnAtras4 = document.getElementById('btnAtras4');
+  const dniInput = document.getElementById('dni');
+  const institucionInput = document.getElementById('institucionEducativa');
+  const direccionInstitucionInput = document.getElementById('direccionInstitucion');
+  const regionInstitucionInput = document.getElementById('regionInstitucion');
+  const telefonoInput = document.getElementById('telefono');
+  const descripcionInput = document.getElementById('descripcion');
+  const pasosFormulario = Array.from(document.querySelectorAll('.form-step'));
+  let pasoActual = 1;
+  
+  // Elementos del modal
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalContenido = document.getElementById('modalContenido');
+  const modalTitulo = document.getElementById('modalTitulo');
+  const modalMensaje = document.getElementById('modalMensaje');
+  const modalHora = document.getElementById('modalHora');
+  const btnCerrarModal = document.getElementById('btnCerrarModal');
+  const modalSpinner = document.getElementById('modalSpinner');
+
+  // Variable para controlar si el envío fue exitoso
+  let envioExitoso = false;
+
+    /**
+   * Verifica si el formulario ya finalizó
+   * Fecha límite: 12 de mayo de 2026 - 00:00 hora Lima (Perú)
+   */
+  function verificarFormularioFinalizado() {
+    // Hora Lima Perú (UTC-5)
+    const ahora = new Date();
+
+    // Fecha límite: 08 de julio 2026 00:00:00 Perú
+    const fechaLimite = new Date('2026-07-09T00:00:00-05:00');
+    // se pone un dia despues a las
+    if (ahora >= fechaLimite) {
+      // Ocultar formulario
+      form.style.display = 'none';
+
+      // Mostrar mensaje
+      mensaje.innerHTML = `
+        <div style="
+          text-align:center;
+          padding:40px 20px;
+          background:#f8f8f8;
+          border:1px solid #ddd;
+          border-radius:10px;
+          margin-top:20px;
+        ">
+          <h2 style="color:#c0392b; margin-bottom:10px;">
+            Formulario finalizado
+          </h2>
+          <p>
+            El periodo de pre-inscripción para la KIWIE 2026 ha concluido.
+          </p>
+        </div>
+      `;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function obtenerPasoActual() {
+    return pasosFormulario.find((paso) => paso.classList.contains('activo'));
+  }
+
+  function mostrarPaso(numeroPaso) {
+    pasoActual = numeroPaso;
+    pasosFormulario.forEach((paso, index) => {
+      paso.classList.toggle('activo', index === numeroPaso - 1);
+    });
+    form.parentElement.classList.remove('was-validated');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validarCamposVisibles() {
+    const pasoVisible = obtenerPasoActual();
+    if (!pasoVisible) {
+      return false;
+    }
+
+    const controles = Array.from(pasoVisible.querySelectorAll('input, select, textarea'));
+
+    for (const control of controles) {
+      if (control.type === 'hidden') {
+        continue;
+      }
+
+      if (!control.checkValidity()) {
+        control.focus();
+        control.reportValidity();
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Obtiene un token del servidor (opcional, no crítico)
+   */
+  async function obtenerToken() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
+      
+      const response = await fetch(`${SCRIPT_URL}?action=getToken`, {
+        method: 'GET',
+        mode: 'cors',
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          formularioToken = data.token;
+          console.log('Token obtenido exitosamente');
+          return true;
+        }
+      }
+    } catch (error) {
+      // Silenciar el error, el token es opcional
+      console.log('Token no disponible, se continuará sin él');
+      return false;
+    }
+    return false;
+  }
+
+  /**
+   * Genera un token del lado del cliente como alternativa
+   */
+  function generarTokenCliente() {
+    const timestamp = new Date().getTime();
+    const random = Math.random().toString(36).substring(2);
+    return `client_${timestamp}_${random}`;
+  }
+
+  /**
+   * Validaciones de seguridad del cliente
+   */
+  function validacionesSeguridad() {
+    const ahora = new Date().getTime();
+    const tiempoTranscurrido = ahora - tiempoInicioFormulario;
+    
+    // Verificar tiempo mínimo
+    if (tiempoTranscurrido < 30000) { // 30 segundos
+      return {
+        valido: false,
+        mensaje: 'Por favor, tómese más tiempo para completar el formulario correctamente.'
+      };
+    }
+    
+    // Verificar intentos de envío
+    if (intentosEnvio >= MAX_INTENTOS) {
+      return {
+        valido: false,
+        mensaje: 'Demasiados intentos de envío. Recargue la página para intentar nuevamente.'
+      };
+    }
+    
+    // Verificar honeypot
+    const honeypot = document.getElementById('honeypot');
+    if (honeypot && honeypot.value !== '') {
+      return {
+        valido: false,
+        mensaje: 'Envío detectado como automatizado.'
+      };
+    }
+    
+    return { valido: true };
+  }
+
+  /**
+   * Validar tamaño de archivos
+   */
+  function validarTamañoArchivos(idsArchivos) {
+    const limitesPorArchivo = {
+      fichaPostulante: 10 * 1024 * 1024,
+      fichaInvencion: 10 * 1024 * 1024
+    };
+    const nombresArchivos = {
+      fichaPostulante: 'Formato de Inscripción',
+      fichaInvencion: 'Fotografía 1'
+    };
+    const archivos = idsArchivos || ['fichaPostulante', 'fichaInvencion'];
+    
+    for (const archivo of archivos) {
+      const input = document.getElementById(archivo);
+      const limite = limitesPorArchivo[archivo] || 10 * 1024 * 1024;
+      if (input && input.files[0] && input.files[0].size > limite) {
+        const nombre = nombresArchivos[archivo] || archivo;
+        const limiteMB = Math.round(limite / (1024 * 1024));
+        return {
+          valido: false,
+          mensaje: `El archivo ${nombre} es muy grande. Máximo ${limiteMB}MB permitido.`
+        };
+      }
+    }
+    
+    return { valido: true };
+  }
+
+  /**
+   * Sanitizar datos de entrada
+   */
+  function sanitizarDatos(datos) {
+    const sanitizado = {};
+    for (const [key, value] of Object.entries(datos)) {
+      if (typeof value === 'string') {
+        // Remover caracteres potencialmente peligrosos
+        sanitizado[key] = value.trim().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+      } else {
+        sanitizado[key] = value;
+      }
+    }
+    return sanitizado;
+  }
+
+  // Función para obtener hora formateada
+  function obtenerHoraActual() {
+    const ahora = new Date();
+    const opciones = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit',
+      hour12: true 
+    };
+    return ahora.toLocaleDateString('es-PE', opciones);
+  }
+
+  // Mostrar modal de carga
+  function mostrarModalCargando() {
+    modalTitulo.textContent = 'Enviando formulario...';
+    modalContenido.className = 'modal-contenido cargando';
+    modalMensaje.textContent = 'Por favor espere mientras se procesa su solicitud.';
+    modalHora.textContent = '';
+    modalSpinner.style.display = 'block';
+    btnCerrarModal.style.display = 'none';
+    modalOverlay.classList.add('activo');
+  }
+
+  // Mostrar modal
+  function mostrarModal(texto, tipo) {
+    modalSpinner.style.display = 'none';
+    btnCerrarModal.style.display = 'block';
+    if (tipo === 'exito') {
+      modalTitulo.textContent = '¡Envío Exitoso!';
+      modalContenido.className = 'modal-contenido exito';
+      envioExitoso = true;
+    } else {
+      modalTitulo.textContent = 'Error';
+      modalContenido.className = 'modal-contenido error';
+      envioExitoso = false;
+    }
+    modalMensaje.textContent = texto;
+    modalHora.textContent = 'Fecha y hora: ' + obtenerHoraActual();
+    modalOverlay.classList.add('activo');
+  }
+
+  // Cerrar modal y recargar página solo si fue exitoso
+  btnCerrarModal.addEventListener('click', function() {
+    modalOverlay.classList.remove('activo');
+    if (envioExitoso) {
+      location.reload();
+    }
+  });
+
+  // Cerrar modal al hacer clic fuera del contenido
+  modalOverlay.addEventListener('click', function(e) {
+    if (e.target === modalOverlay) {
+      modalOverlay.classList.remove('activo');
+      if (envioExitoso) {
+        location.reload();
+      }
+    }
+  });
+
+  // Validación personalizada para DNI
+  function validarDNI() {
+    const valor = dniInput.value;
+    if (valor.length === 0) {
+      dniInput.setCustomValidity('Este campo es obligatorio');
+    } else if (valor.length !== 8) {
+      dniInput.setCustomValidity('El DNI debe contener exactamente 8 dígitos');
+    } else if (!/^[0-9]{8}$/.test(valor)) {
+      dniInput.setCustomValidity('El DNI solo debe contener números');
+    } else {
+      dniInput.setCustomValidity('');
+    }
+  }
+
+  // Ejecutar validación de DNI en cada cambio
+  dniInput.addEventListener('input', validarDNI);
+  dniInput.addEventListener('blur', validarDNI);
+
+  // Validación personalizada para teléfono
+  function validarTelefono(input) {
+    const valor = input.value;
+    const soloDigitos = valor.replace(/[^0-9]/g, '');
+    if (valor.length === 0) {
+      input.setCustomValidity('Este campo es obligatorio');
+    } else if (soloDigitos.length < 7) {
+      input.setCustomValidity('El teléfono debe contener al menos 7 dígitos');
+    } else if (!/^[0-9+\-]+$/.test(valor)) {
+      input.setCustomValidity('Solo se permiten números y los símbolos + y -');
+    } else {
+      input.setCustomValidity('');
+    }
+  }
+
+  // Ejecutar validación de teléfonos en cada cambio
+  telefonoInput.addEventListener('input', () => validarTelefono(telefonoInput));
+  telefonoInput.addEventListener('blur', () => validarTelefono(telefonoInput));
+
+  // Validación personalizada para expediente
+  // (expediente field removed)
+
+  // Validación personalizada para descripción
+  function validarDescripcion() {
+    const valor = descripcionInput.value.trim();
+    if (valor.length === 0) {
+      descripcionInput.setCustomValidity('Este campo es obligatorio');
+    } else if (valor.length < 300) {
+      descripcionInput.setCustomValidity('La descripción debe contener al menos 300 caracteres');
+    } else {
+      descripcionInput.setCustomValidity('');
+    }
+  }
+
+  // Ejecutar validación de descripción en cada cambio
+  descripcionInput.addEventListener('input', validarDescripcion);
+  descripcionInput.addEventListener('blur', validarDescripcion);
+
+  // Convertir archivo a Base64
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve({ base64: '', nombre: '' });
+        return;
+      }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve({ base64: reader.result, nombre: file.name });
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // Mostrar mensaje (mantener para compatibilidad, pero usar modal)
+  function mostrarMensaje(texto, tipo) {
+    mostrarModal(texto, tipo);
+  }
+
+  // Obtener token al cargar la página (no bloqueante)
+  window.addEventListener('load', function() {
+    // Verificar cierre del formulario
+    if (verificarFormularioFinalizado()) {
+      return;
+    }
+
+    obtenerToken().catch(() => {
+      // Si falla, generar token del cliente
+      formularioToken = generarTokenCliente();
+    });
+  });
+
+  // Detectar cambios sospechosos
+  let contadorCambiosRapidos = 0;
+  form.addEventListener('input', function() {
+    contadorCambiosRapidos++;
+    if (contadorCambiosRapidos > 50) { // Demasiados cambios muy rápidos
+      console.warn('Actividad sospechosa detectada');
+    }
+  });
+
+  /**
+   * Genera un ID único para el envío
+   */
+  function generarIdEnvio() {
+    const timestamp = new Date().getTime();
+    const random = Math.random().toString(36).substring(2, 15);
+    return `envio_${timestamp}_${random}`;
+  }
+
+  // ===== MANEJO DE INVENTORES =====
+  const MAX_INVENTORES = 100; // Aumentado a 100 para mayor flexibilidad
+  const inventoresContainer = document.getElementById('inventoresContainer');
+  const btnAddInventor = document.getElementById('btnAddInventor');
+  let inventorSequence = 1;
+
+  /**
+   * Renderiza el formulario de un inventor
+   */
+  function crearFormuarioInventor(numero) {
+    const inventorHTML = `
+      <div class="inventor-item" data-inventor="${numero}">
+        <h5>Inventor ${numero}</h5>
+        <button type="button" class="btn-remove-inventor" onclick="removerInventor(${numero})">Remover</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="required">Apellidos</label>
+            <input type="text" class="inventor-apellidos" data-numero="${numero}" required>
+          </div>
+          <div class="form-group">
+            <label class="required">Nombres</label>
+            <input type="text" class="inventor-nombres" data-numero="${numero}" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="required">DNI</label>
+            <input type="text" class="inventor-dni" data-numero="${numero}" maxlength="8" pattern="[0-9]{8}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+          </div>
+          <div class="form-group">
+            <label class="required">Género</label>
+            <select class="inventor-genero" data-numero="${numero}" required>
+              <option value="">Seleccione...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+    return inventorHTML;
+  }
+
+  /**
+   * Agrega un nuevo inventor al formulario
+   */
+  window.agregarInventor = function() {
+    if (inventoresContainer.children.length >= MAX_INVENTORES) {
+      alert(`Se ha alcanzado el máximo de ${MAX_INVENTORES} inventores`);
+      return;
+    }
+
+    inventorSequence++;
+    inventoresContainer.insertAdjacentHTML('beforeend', crearFormuarioInventor(inventorSequence));
+    actualizarEstadoBtnAgregar();
+  };
+
+  /**
+   * Remueve un inventor del formulario
+   */
+  window.removerInventor = function(numero) {
+    const inventorItem = document.querySelector(`.inventor-item[data-inventor="${numero}"]`);
+    if (inventorItem) {
+      inventorItem.remove();
+      // Recalcular si hay al menos 1 inventor
+      if (inventoresContainer.children.length === 0) {
+        inventoresContainer.innerHTML = crearFormuarioInventor(1);
+        inventorSequence = 1;
+      }
+      actualizarEstadoBtnAgregar();
+    }
+  };
+
+  /**
+   * Actualiza el estado del botón "Agregar Inventor"
+   */
+  function actualizarEstadoBtnAgregar() {
+    btnAddInventor.disabled = inventoresContainer.children.length >= MAX_INVENTORES;
+  }
+
+  /**
+   * Obtiene los datos de todos los inventores
+   */
+  function obtenerInventores() {
+    const inventorItems = Array.from(inventoresContainer.querySelectorAll('.inventor-item'));
+    const inventores = [];
+    
+    inventorItems.forEach((item) => {
+      const num = item.getAttribute('data-inventor');
+      const apellidos = item.querySelector(`.inventor-apellidos[data-numero="${num}"]`).value;
+      const nombres = item.querySelector(`.inventor-nombres[data-numero="${num}"]`).value;
+      const dni = item.querySelector(`.inventor-dni[data-numero="${num}"]`).value;
+      const genero = item.querySelector(`.inventor-genero[data-numero="${num}"]`).value;
+      
+      if (apellidos || nombres || dni || genero) {
+        inventores.push({
+          apellidos,
+          nombres,
+          dni,
+          genero
+        });
+      }
+    });
+    
+    return inventores;
+  }
+
+  /**
+   * Valida que haya al menos 1 inventor y máximo 6
+   */
+  function validarInventores() {
+    const inventores = obtenerInventores();
+    
+    if (inventores.length === 0) {
+      mostrarModal('Debe agregar al menos 1 inventor', 'error');
+      return false;
+    }
+    
+    // Validar que todos los campos obligatorios estén llenos
+    for (const inventor of inventores) {
+      if (!inventor.apellidos || !inventor.nombres || !inventor.dni || !inventor.genero) {
+        mostrarModal('Por favor complete todos los campos de los inventores', 'error');
+        return false;
+      }
+      if (!/^[0-9]{8}$/.test(inventor.dni)) {
+        mostrarModal(`El DNI "${inventor.dni}" no es válido (debe tener 8 dígitos)`, 'error');
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  // Inicializar con 1 inventor
+  inventoresContainer.innerHTML = crearFormuarioInventor(1);
+  btnAddInventor.addEventListener('click', agregarInventor);
+  actualizarEstadoBtnAgregar();
+
+  btnContinuar1.addEventListener('click', function() {
+    form.parentElement.classList.add('was-validated');
+
+    validarDNI();
+    validarTelefono(telefonoInput);
+
+    if (!validarCamposVisibles()) {
+      return;
+    }
+    mostrarPaso(2);
+  });
+
+  btnContinuar2.addEventListener('click', function() {
+    form.parentElement.classList.add('was-validated');
+
+    if (!validarCamposVisibles()) {
+      return;
+    }
+
+    const validacionArchivosPaso2 = validarTamañoArchivos(['fichaPostulante', 'fichaInvencion']);
+    if (!validacionArchivosPaso2.valido) {
+      mostrarModal(validacionArchivosPaso2.mensaje, 'error');
+      return;
+    }
+
+    // Validar inventores en el paso 2 (moved here)
+    if (!validarInventores()) {
+      return;
+    }
+
+    mostrarPaso(3);
+  });
+
+  btnContinuar3.addEventListener('click', function() {
+    form.parentElement.classList.add('was-validated');
+
+    validarDescripcion();
+
+    if (!validarCamposVisibles()) {
+      return;
+    }
+
+    mostrarPaso(4);
+  });
+
+  btnAtras2.addEventListener('click', function() {
+    mostrarPaso(1);
+  });
+
+  btnAtras3.addEventListener('click', function() {
+    mostrarPaso(2);
+  });
+
+  btnAtras4.addEventListener('click', function() {
+    mostrarPaso(3);
+  });
+
+  /**
+   * Verifica el estado de un envío mediante polling
+   */
+  async function verificarEstadoEnvio(idEnvio, intentos = 0) {
+    const MAX_INTENTOS_VERIFICACION = 20; // 20 intentos = 40 segundos máximo
+    const INTERVALO = 2000; // 2 segundos entre cada intento
+
+    if (intentos >= MAX_INTENTOS_VERIFICACION) {
+      throw new Error('No se pudo verificar el estado del envío. Por favor, contacte al administrador.');
+    }
+
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=checkStatus&id=${idEnvio}`, {
+        method: 'GET',
+        mode: 'cors'
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al verificar el estado del envío');
+      }
+
+      const resultado = await response.json();
+
+      if (resultado.status === 'pending') {
+        // Aún está procesando, esperar y reintentar
+        await new Promise(resolve => setTimeout(resolve, INTERVALO));
+        return verificarEstadoEnvio(idEnvio, intentos + 1);
+      } else if (resultado.status === 'success') {
+        return { success: true, message: resultado.message };
+      } else if (resultado.status === 'error') {
+        return { success: false, message: resultado.message };
+      } else {
+        // Estado no encontrado, esperar un poco más
+        await new Promise(resolve => setTimeout(resolve, INTERVALO));
+        return verificarEstadoEnvio(idEnvio, intentos + 1);
+      }
+    } catch (error) {
+      // Si hay error en la verificación, esperar y reintentar
+      if (intentos < MAX_INTENTOS_VERIFICACION - 1) {
+        await new Promise(resolve => setTimeout(resolve, INTERVALO));
+        return verificarEstadoEnvio(idEnvio, intentos + 1);
+      }
+      throw error;
+    }
+  }
+
+  // Manejar envío del formulario con seguridad mejorada
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    form.parentElement.classList.add('was-validated');
+
+    if (pasoActual !== 4) {
+      mostrarPaso(4);
+      return;
+    }
+
+    if (!validarCamposVisibles()) {
+      return;
+    }
+    
+    // Incrementar contador de intentos
+    intentosEnvio++;
+    
+    // Resetear estado de envío
+    envioExitoso = false;
+    
+    // Validaciones de seguridad
+    const validacionSeguridad = validacionesSeguridad();
+    if (!validacionSeguridad.valido) {
+      mostrarModal(validacionSeguridad.mensaje, 'error');
+      return;
+    }
+    
+    // Validar DNI antes de enviar
+    validarDNI();
+    
+    // Validar teléfonos antes de enviar
+    validarTelefono(telefonoInput);
+
+    // (expediente field removed)
+    
+    // Agregar clase para mostrar validación
+    form.parentElement.classList.add('was-validated');
+    
+    if (!dniInput.checkValidity() || !telefonoInput.checkValidity()) {
+      return;
+    }
+
+    // Si no hay token, generar uno del cliente
+    if (!formularioToken) {
+      formularioToken = generarTokenCliente();
+    }
+
+    btnSubmit.disabled = true;
+    mostrarModalCargando();
+
+    try {
+      // Obtener archivos
+      const fichaPostulanteFile = document.getElementById('fichaPostulante').files[0];
+      const fichaInvencionFile = document.getElementById('fichaInvencion').files[0];
+
+      // Validar que los archivos existan
+      if (!fichaPostulanteFile || !fichaInvencionFile) {
+        throw new Error('Por favor, seleccione todos los archivos requeridos.');
+      }
+
+      // Convertir archivos a Base64
+      const [fichaPostulante, fichaInvencion] = await Promise.all([
+        fileToBase64(fichaPostulanteFile),
+        fileToBase64(fichaInvencionFile)
+      ]);
+
+      // Función auxiliar para agregar apellido al nombre del archivo
+      function agregarApellidoAlNombre(nombreArchivo, apellido) {
+        const ultimoPunto = nombreArchivo.lastIndexOf('.');
+        const ahora = new Date();
+        const fecha = ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+        const hora = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '-');
+        const fechaHora = fecha + ' ' + hora;
+        if (ultimoPunto === -1) {
+          return nombreArchivo + ' ' + apellido + ' ' + fechaHora;
+        }
+        const nombre = nombreArchivo.substring(0, ultimoPunto);
+        const extension = nombreArchivo.substring(ultimoPunto);
+        return nombre + ' ' + apellido + ' ' + fechaHora + extension;
+      }
+
+      const apellidoRep = document.getElementById('apellidosRepresentante').value;
+
+      // Generar ID único para este envío
+      const idEnvio = generarIdEnvio();
+
+      // Construir objeto de datos
+      let datos = {
+        idEnvio: idEnvio,
+        titulo: document.getElementById('titulo').value,
+        categoriaParticipacion: document.querySelector('input[name="categoriaParticipacion"]:checked') ? document.querySelector('input[name="categoriaParticipacion"]:checked').value : '',
+        institucionEducativa: document.getElementById('institucionEducativa').value,
+        direccionInstitucion: document.getElementById('direccionInstitucion').value,
+        regionInstitucion: document.getElementById('regionInstitucion').value,
+        apellidosRepresentante: document.getElementById('apellidosRepresentante').value,
+        nombreRepresentante: document.getElementById('nombreRepresentante').value,
+        dni: document.getElementById('dni').value,
+        telefono: document.getElementById('telefono').value,
+        correo: document.getElementById('correo').value,
+        fichaPostulanteBase64: fichaPostulante.base64,
+        fichaPostulanteNombreArchivo: agregarApellidoAlNombre(fichaPostulante.nombre, apellidoRep),
+        fichaInvencionBase64: fichaInvencion.base64,
+        fichaInvencionNombreArchivo: agregarApellidoAlNombre(fichaInvencion.nombre, apellidoRep),
+        descripcion: document.getElementById('descripcion').value.trim(),
+        declaracion1: document.getElementById('declaracion1').checked,
+        declaracion2: document.getElementById('declaracion2').checked,
+        inventores: obtenerInventores(),
+        // Campos de seguridad
+        honeypot: document.getElementById('honeypot').value,
+        token: formularioToken,
+        tiempoFormulario: new Date().getTime() - tiempoInicioFormulario
+      };
+
+      // Sanitizar datos
+      datos = sanitizarDatos(datos);
+
+      // Enviar datos al Apps Script usando no-cors
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(datos)
+      }).catch(error => {
+        console.log('Fetch iniciado (no-cors):', error);
+      });
+
+      // Esperar un momento antes de verificar
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Verificar el estado del envío mediante polling
+      const resultado = await verificarEstadoEnvio(idEnvio);
+
+      if (resultado.success) {
+        // Remover clase de validación antes de mostrar éxito
+        form.parentElement.classList.remove('was-validated');
+        
+        mostrarMensaje('¡Formulario enviado exitosamente! Gracias por su participación.', 'exito');
+        form.reset();
+        
+        // Resetear variables de seguridad
+        tiempoInicioFormulario = new Date().getTime();
+        intentosEnvio = 0;
+        // Generar nuevo token para próximo envío
+        formularioToken = generarTokenCliente();
+      } else {
+        throw new Error(resultado.message || 'Error al procesar el formulario');
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      mostrarMensaje('Error al enviar el formulario: ' + error.message, 'error');
+      btnSubmit.disabled = false;
+    }
+  });
+})();
+
+</script>
