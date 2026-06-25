@@ -429,6 +429,15 @@
       <h3 class="step-title">Almunnos Participantes</h3>
       <p class="section-intro">Completar la categoría de participación, y datos de los alumnos participantes</p>
       <div class="form-group">
+        <label class="required" for="numeroAlumnos">Numero de alumnos</label>
+        <select id="numeroAlumnos" name="numeroAlumnos" required>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label class="required">Categoría de participación</label>
         <div style="margin-left:8px;">
           <div style="margin-bottom:6px;">
@@ -448,7 +457,6 @@
         <div class="inventores-container" id="inventoresContainer">
           <!-- Inventores dinámicos se agregarán aquí -->
         </div>
-        <button type="button" class="btn-add-inventor" id="btnAddInventor">+ Agregar Inventor</button>
       </div>
 
       <div class="form-group">
@@ -947,9 +955,9 @@
 
   // ===== MANEJO DE INVENTORES =====
   const MAX_INVENTORES = 4;
+  const MIN_INVENTORES = 1;
+  const numeroAlumnosSelect = document.getElementById('numeroAlumnos');
   const inventoresContainer = document.getElementById('inventoresContainer');
-  const btnAddInventor = document.getElementById('btnAddInventor');
-  let inventorSequence = 1;
 
   /**
    * Renderiza el formulario de un inventor
@@ -958,7 +966,6 @@
     const inventorHTML = `
       <div class="inventor-item" data-inventor="${numero}">
         <h5>Alumno ${numero}</h5>
-        <button type="button" class="btn-remove-inventor" onclick="removerInventor(${numero})">Remover</button>
         <div class="form-row">
           <div class="form-group">
             <label class="required">Apellidos</label>
@@ -1003,45 +1010,17 @@
   }
 
   /**
-   * Agrega un nuevo inventor al formulario
+   * Renderiza la cantidad exacta de inventores segun el selector
    */
-  window.agregarInventor = function() {
-    if (inventoresContainer.children.length >= MAX_INVENTORES) {
-      alert(`Se ha alcanzado el máximo de ${MAX_INVENTORES} inventores`);
-      return;
+  function renderizarInventores(cantidad) {
+    const cantidadNormalizada = Math.min(Math.max(cantidad || MIN_INVENTORES, MIN_INVENTORES), MAX_INVENTORES);
+    let html = '';
+
+    for (let i = 1; i <= cantidadNormalizada; i++) {
+      html += crearFormuarioInventor(i);
     }
 
-    inventorSequence++;
-    inventoresContainer.insertAdjacentHTML('beforeend', crearFormuarioInventor(inventorSequence));
-    actualizarEstadoBtnAgregar();
-  };
-
-  /**
-   * Remueve un inventor del formulario
-   */
-  window.removerInventor = function(numero) {
-    const inventorItem = document.querySelector(`.inventor-item[data-inventor="${numero}"]`);
-    if (inventorItem) {
-      inventorItem.remove();
-      // Recalcular si hay al menos 1 inventor
-      if (inventoresContainer.children.length === 0) {
-        inventoresContainer.innerHTML = crearFormuarioInventor(1);
-        inventorSequence = 1;
-      }
-
-      if (numero > 2) {
-        inventorSequence = numero - 1;
-      }
-      
-      actualizarEstadoBtnAgregar();
-    }
-  };
-
-  /**
-   * Actualiza el estado del botón "Agregar Inventor"
-   */
-  function actualizarEstadoBtnAgregar() {
-    btnAddInventor.disabled = inventoresContainer.children.length >= MAX_INVENTORES;
+    inventoresContainer.innerHTML = html;
   }
 
   /**
@@ -1073,7 +1052,7 @@
   }
 
   /**
-   * Valida que haya al menos 1 inventor y máximo 6
+   * Valida que haya al menos 1 inventor y maximo 4
    */
   function validarInventores() {
     const inventores = obtenerInventores();
@@ -1104,10 +1083,13 @@
     return true;
   }
 
-  // Inicializar con 1 inventor
-  inventoresContainer.innerHTML = crearFormuarioInventor(1);
-  btnAddInventor.addEventListener('click', agregarInventor);
-  actualizarEstadoBtnAgregar();
+  numeroAlumnosSelect.addEventListener('change', function() {
+    const cantidad = parseInt(numeroAlumnosSelect.value, 10);
+    renderizarInventores(cantidad);
+  });
+
+  // Inicializar inventores segun el valor por defecto del selector
+  renderizarInventores(parseInt(numeroAlumnosSelect.value, 10));
 
   btnContinuar1.addEventListener('click', function() {
     form.parentElement.classList.add('was-validated');
