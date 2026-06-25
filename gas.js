@@ -30,8 +30,8 @@ function subirArchivo(fileName, archivoBase64, folderId) {
  * Hoja: Registros
  */
 const SPREADSHEET_ID = '1LO_m4h9QpqT0D-nL8_0G9tP0__sMEiNfwXJgF90klno';
-const SHEET_NAME = 'Respuestas';
-const SHEET_PERSONAS = 'Personas';
+const SHEET_NAME = 'Postulaciones';
+const SHEET_PERSONAS = 'Alumnos';
 const FOLDER_ID = '1kq_oMryCC04arWJzIQpwYJEUMJUP9IPk';//
 
 /**
@@ -74,8 +74,12 @@ function guardarInventores(datos, fechaEnvio) {
     // Si la pestaña no existe, crearla
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_PERSONAS);
-      // Agregar encabezados (sin Género)
-      sheet.appendRow(['Fecha de Envío', 'Título de la Invención', 'Apellidos', 'Nombres', 'Edad', 'Grado']);
+      sheet.appendRow(['Fecha de Envío', 'Título de la Invención', 'Apellidos', 'Nombres', 'Género', 'Edad', 'Grado']);
+    } else {
+      const encabezados = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+      if (encabezados.indexOf('Género') === -1) {
+        sheet.getRange(1, encabezados.length + 1).setValue('Género');
+      }
     }
     
     const fecha = fechaEnvio || Utilities.formatDate(new Date(), 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
@@ -89,6 +93,7 @@ function guardarInventores(datos, fechaEnvio) {
           titulo,
           inventor.apellidos || '',
           inventor.nombres || '',
+          inventor.genero || '',
           inventor.edad || '',
           inventor.grado || ''
         ];
@@ -139,6 +144,16 @@ function guardarDatos(datos) {
       );
     }
 
+    // Subir archivo declaracionParteAsesor solo si existe
+    let declaracionParteAsesorUrl = '';
+    if (datos.declaracionParteAsesorBase64 && datos.declaracionParteAsesorNombreArchivo) {
+      declaracionParteAsesorUrl = subirArchivo(
+        datos.declaracionParteAsesorNombreArchivo,
+        datos.declaracionParteAsesorBase64,
+        FOLDER_ID
+      );
+    }
+
     // Crear array con los datos
     const fila = [
       fecha,
@@ -155,9 +170,9 @@ function guardarDatos(datos) {
       datos.correo,
       fichaPostulanteUrl,
       fichaInvencionUrl,
+      declaracionParteAsesorUrl,
       datos.descripcion || '',
-      datos.autorizacionContacto || '',
-      datos.tiempoFormulario || ''
+      datos.autorizacionContacto || ''
     ];
     
     // Guardar inventores en la pestaña Personas
@@ -352,6 +367,10 @@ function validarDatos(datos) {
   if (datos.fichaInvencionBase64 && datos.fichaInvencionBase64.length > SECURITY_CONFIG.MAX_FILE_SIZE * 1.4) {
     return { valido: false, error: 'Archivo de ficha invención muy grande' };
   }
+
+  if (datos.declaracionParteAsesorBase64 && datos.declaracionParteAsesorBase64.length > SECURITY_CONFIG.MAX_FILE_SIZE * 1.4) {
+    return { valido: false, error: 'Archivo de declaración parte asesor muy grande' };
+  }
   
   // Validar inventores: al menos 1 y campos requeridos por inventor
   if (!datos.inventores || !Array.isArray(datos.inventores) || datos.inventores.length === 0) {
@@ -359,8 +378,12 @@ function validarDatos(datos) {
   }
 
   for (const inventor of datos.inventores) {
-    if (!inventor.apellidos || !inventor.nombres || !inventor.edad || !inventor.grado) {
-      return { valido: false, error: 'Cada inventor debe tener apellidos, nombres, edad y grado' };
+    if (!inventor.apellidos || !inventor.nombres || !inventor.genero || !inventor.edad || !inventor.grado) {
+      return { valido: false, error: 'Cada inventor debe tener apellidos, nombres, género, edad y grado' };
+    }
+
+    if (!['Masculino', 'Femenino'].includes(inventor.genero)) {
+      return { valido: false, error: 'Género de inventor inválido' };
     }
     // Validar edad como entero positivo
     const edadNum = parseInt(inventor.edad, 10);

@@ -335,10 +335,9 @@
     </div>
 
     <section class="form-step activo" data-step="1">
-      <h3 class="step-title" style="display:none;">Delegación Perú / Pre-Inscripción KIWIE 2026</h3>
+      <h3 class="step-title" style="display:none;">IDF 2026</h3>
       <div class="section-intro" style="display:none;">
-        <p>El Indecopi convoca a inventoras peruanas con patente en trámite o concedida para representar al Perú en la Korea International Women's Invention Exposition - KIWIE 2026, que se llevará a cabo del 16 al 18 de julio de 2026.</p>
-        
+        <p>El Indecopi convoca a los colegio a participar del concurso IDF 2026</p>
       </div>
 
       <div class="form-group">
@@ -384,17 +383,17 @@
       </div>
 
       <div class="form-group">
-        <label class="required" for="apellidosRepresentante">Apellidos del Representante</label>
+        <label class="required" for="apellidosRepresentante">Apellidos del Asesor</label>
         <input type="text" id="apellidosRepresentante" name="apellidosRepresentante" required>
       </div>
 
       <div class="form-group">
-        <label class="required" for="nombreRepresentante">Nombres del Representante</label>
+        <label class="required" for="nombreRepresentante">Nombres del Asesor</label>
         <input type="text" id="nombreRepresentante" name="nombreRepresentante" required>
       </div>
 
       <div class="form-group">
-        <label class="required" for="dni">DNI</label>
+        <label class="required" for="dni">DNI del Asesor</label>
         <input type="text" id="dni" name="dni" maxlength="8"
                pattern="[0-9]{8}"
                title="El DNI debe contener 8 dígitos"
@@ -403,7 +402,7 @@
       </div>
 
       <div class="form-group">
-        <label class="required" for="telefono">Teléfono</label>
+        <label class="required" for="telefono">Teléfono del Asesor</label>
         <input type="tel" id="telefono" name="telefono"
                pattern="[0-9+\-]{7,15}"
                title="El teléfono debe contener al menos 7 dígitos"
@@ -440,13 +439,12 @@
             <input type="radio" id="categoriaB" name="categoriaParticipacion" value="B">
             <label for="categoriaB" style="display:inline; font-weight: normal;">Categoría B (2do de secundaria a 5to de secundaria)</label>
           </div>
-          <!-- Campo 'Género' eliminado según solicitud -->
         </div>
       </div>
 
       <div class="inventores-section">
-        <h4 class="required">Inventores</h4>
-        <p class="field-help">Ingrese la información de los inventores (mínimo 1).</p>
+        <h4 class="required">Alumnos Inventores</h4>
+        <p class="field-help">Ingrese la información de los alumnos (mínimo 1).</p>
         <div class="inventores-container" id="inventoresContainer">
           <!-- Inventores dinámicos se agregarán aquí -->
         </div>
@@ -474,25 +472,28 @@
       </div>
       
       <div class="form-group">
-        <label class="required" for="descripcion">Descripción de la Invención</label>
+        <label class="required" for="descripcion">FICHA TÉCNICA DEL PROYECTO</label>
         <p class="field-help">Describa claramente en qué consiste la invención y qué problema busca resolver que la haga diferente a otros productos/procedimientos, así como su impacto social, económico o comercial.</p>
         <textarea id="descripcion" name="descripcion" rows="5" minlength="300" required></textarea>
       </div>
 
       <div class="form-group">
-        <label class="required" for="fichaPostulante">Formato de Inscripción</label>
-        <p class="field-help"><a href="https://www.patenta.pe/wp-content/uploads/2026/05/iCAN2026-APPLICATION-FORM.docx"><u>Descargue</u></a>, complete, guarde en Formato PDF</p>
-        <p class="field-help">Complete 1 formulario por cada invención.</p>
-        <p class="field-help">No acumule archivos PDF.</p>
-        <p class="field-help">Tamaño máximo: 10 MB.</p>
-        <input type="file" id="fichaPostulante" name="fichaPostulante" accept=".pdf" required>
+        <label class="required" for="fichaPostulante">DECLARACIONES Y ACUERDOS DE PARTE DEL ASESOR</label>
+        <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
+        <input type="file" id="fichaPostulante" name="fichaPostulante" accept=".doc,.docx,.pdf" required>
       </div>
 
       <div class="form-group">
-        <label class="required" for="fichaInvencion">Fotografía 1</label>
-        <p class="field-help">Ingrese una primera fotografía de la invención. Esta será utilizada en la publicación en línea y será promocionada para su calificación. Procure utilizar una cámara de buena resolución y buena iluminación, o en su defecto diseño gráfico o asistido por computadora.</p>
-        <p class="field-help">Sube 1 archivo compatible: imagen. Tamaño máximo: 10 MB.</p>
-        <input type="file" id="fichaInvencion" name="fichaInvencion" accept=".jpg,.jpeg,.png,.webp" required>
+        <label class="required" for="fichaInvencion">CONSENTIMIENTO Y DECLARACIONES DEL MADRE/PADRE O TUTOR
+</label>
+        <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
+        <input type="file" id="fichaInvencion" name="fichaInvencion" accept=".doc,.docx,.pdf" required>
+      </div>
+
+      <div class="form-group">
+        <label class="required" for="declaracionParteAsesor">Declaración parte asesor</label>
+        <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
+        <input type="file" id="declaracionParteAsesor" name="declaracionParteAsesor" accept=".doc,.docx,.pdf" required>
       </div>
 
       <div class="form-group">
@@ -545,7 +546,7 @@
   const MAX_INTENTOS = 100;
   
   // URL del Web App de Google Apps Script (reemplazar con tu URL)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOUa0GTwZEwH1RC9Cy7NOZCzscPMd28JQL85hlp15WOIp7upkEI2Hz7Rh6iiZ5YbTR_A/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxGnh6NRFbUvsfgf8nNyUyjFWx8gZz0XprDUBrMhvLtXSgAJFaheRyejd6iV7DD1lM7A/exec';
 
   const form = document.getElementById('formConcurso');
   const mensaje = document.getElementById('mensaje');
@@ -734,13 +735,15 @@
   function validarTamañoArchivos(idsArchivos) {
     const limitesPorArchivo = {
       fichaPostulante: 10 * 1024 * 1024,
-      fichaInvencion: 10 * 1024 * 1024
+      fichaInvencion: 10 * 1024 * 1024,
+      declaracionParteAsesor: 10 * 1024 * 1024
     };
     const nombresArchivos = {
       fichaPostulante: 'Formato de Inscripción',
-      fichaInvencion: 'Fotografía 1'
+      fichaInvencion: 'Fotografía 1',
+      declaracionParteAsesor: 'Declaración parte asesor'
     };
-    const archivos = idsArchivos || ['fichaPostulante', 'fichaInvencion'];
+    const archivos = idsArchivos || ['fichaPostulante', 'fichaInvencion', 'declaracionParteAsesor'];
     
     for (const archivo of archivos) {
       const input = document.getElementById(archivo);
@@ -943,7 +946,7 @@
   }
 
   // ===== MANEJO DE INVENTORES =====
-  const MAX_INVENTORES = 100; // Aumentado a 100 para mayor flexibilidad
+  const MAX_INVENTORES = 4;
   const inventoresContainer = document.getElementById('inventoresContainer');
   const btnAddInventor = document.getElementById('btnAddInventor');
   let inventorSequence = 1;
@@ -954,7 +957,7 @@
   function crearFormuarioInventor(numero) {
     const inventorHTML = `
       <div class="inventor-item" data-inventor="${numero}">
-        <h5>Inventor ${numero}</h5>
+        <h5>Alumno ${numero}</h5>
         <button type="button" class="btn-remove-inventor" onclick="removerInventor(${numero})">Remover</button>
         <div class="form-row">
           <div class="form-group">
@@ -967,6 +970,14 @@
           </div>
         </div>
         <div class="form-row">
+          <div class="form-group">
+            <label class="required">Género</label>
+            <select class="inventor-genero" data-numero="${numero}" required>
+              <option value="">Seleccione...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </div>
           <div class="form-group">
             <label class="required">Edad</label>
             <input type="number" class="inventor-edad" data-numero="${numero}" min="4" max="120" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
@@ -1017,6 +1028,11 @@
         inventoresContainer.innerHTML = crearFormuarioInventor(1);
         inventorSequence = 1;
       }
+
+      if (numero > 2) {
+        inventorSequence = numero - 1;
+      }
+      
       actualizarEstadoBtnAgregar();
     }
   };
@@ -1039,12 +1055,14 @@
       const num = item.getAttribute('data-inventor');
       const apellidos = item.querySelector(`.inventor-apellidos[data-numero="${num}"]`).value;
       const nombres = item.querySelector(`.inventor-nombres[data-numero="${num}"]`).value;
+      const genero = item.querySelector(`.inventor-genero[data-numero="${num}"]`).value;
       const edad = item.querySelector(`.inventor-edad[data-numero="${num}"]`).value;
       const grado = item.querySelector(`.inventor-grado[data-numero="${num}"]`).value;
-      if (apellidos || nombres || edad || grado) {
+      if (apellidos || nombres || genero || edad || grado) {
         inventores.push({
           apellidos,
           nombres,
+          genero,
           edad,
           grado
         });
@@ -1067,8 +1085,12 @@
     
     // Validar que todos los campos obligatorios estén llenos
     for (const inventor of inventores) {
-      if (!inventor.apellidos || !inventor.nombres || !inventor.edad || !inventor.grado) {
+      if (!inventor.apellidos || !inventor.nombres || !inventor.genero || !inventor.edad || !inventor.grado) {
         mostrarModal('Por favor complete todos los campos de los inventores', 'error');
+        return false;
+      }
+      if (!['Masculino', 'Femenino'].includes(inventor.genero)) {
+        mostrarModal('El género de cada inventor debe ser Masculino o Femenino', 'error');
         return false;
       }
       // Validar edad como número entero positivo
@@ -1233,16 +1255,18 @@
       // Obtener archivos
       const fichaPostulanteFile = document.getElementById('fichaPostulante').files[0];
       const fichaInvencionFile = document.getElementById('fichaInvencion').files[0];
+      const declaracionParteAsesorFile = document.getElementById('declaracionParteAsesor').files[0];
 
       // Validar que los archivos existan
-      if (!fichaPostulanteFile || !fichaInvencionFile) {
+      if (!fichaPostulanteFile || !fichaInvencionFile || !declaracionParteAsesorFile) {
         throw new Error('Por favor, seleccione todos los archivos requeridos.');
       }
 
       // Convertir archivos a Base64
-      const [fichaPostulante, fichaInvencion] = await Promise.all([
+      const [fichaPostulante, fichaInvencion, declaracionParteAsesor] = await Promise.all([
         fileToBase64(fichaPostulanteFile),
-        fileToBase64(fichaInvencionFile)
+        fileToBase64(fichaInvencionFile),
+        fileToBase64(declaracionParteAsesorFile)
       ]);
 
       // Función auxiliar para agregar apellido al nombre del archivo
@@ -1282,6 +1306,8 @@
         fichaPostulanteNombreArchivo: agregarApellidoAlNombre(fichaPostulante.nombre, apellidoRep),
         fichaInvencionBase64: fichaInvencion.base64,
         fichaInvencionNombreArchivo: agregarApellidoAlNombre(fichaInvencion.nombre, apellidoRep),
+        declaracionParteAsesorBase64: declaracionParteAsesor.base64,
+        declaracionParteAsesorNombreArchivo: agregarApellidoAlNombre(declaracionParteAsesor.nombre, apellidoRep),
         descripcion: document.getElementById('descripcion').value.trim(),
         autorizacionContacto: document.querySelector('input[name="autorizacionContacto"]:checked') ? document.querySelector('input[name="autorizacionContacto"]:checked').value : '',
         inventores: obtenerInventores(),
