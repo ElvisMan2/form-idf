@@ -172,7 +172,8 @@ function guardarDatos(datos) {
       fichaInvencionUrl,
       declaracionParteAsesorUrl,
       datos.descripcion || '',
-      datos.autorizacionContacto || ''
+      datos.autorizacionContacto || '',
+      datos.numeroAlumnos || ''
     ];
     
     // Guardar inventores en la pestaña Personas
@@ -353,6 +354,12 @@ function validarDatos(datos) {
   if (!datos.autorizacionContacto || !['Si', 'No'].includes(datos.autorizacionContacto)) {
     return { valido: false, error: 'Autorización de contacto inválida' };
   }
+
+  // Validar número de alumnos (1 a 4)
+  const numeroAlumnos = parseInt(datos.numeroAlumnos, 10);
+  if (isNaN(numeroAlumnos) || numeroAlumnos < 1 || numeroAlumnos > 4) {
+    return { valido: false, error: 'Número de alumnos inválido' };
+  }
   
   // Verificar honeypot
   if (datos.honeypot && datos.honeypot !== '') {
@@ -390,6 +397,10 @@ function validarDatos(datos) {
     if (isNaN(edadNum) || edadNum <= 0) {
       return { valido: false, error: `Edad de inventor inválida: ${inventor.edad}` };
     }
+  }
+
+  if (datos.inventores.length !== numeroAlumnos) {
+    return { valido: false, error: 'El número de alumnos no coincide con la cantidad de inventores' };
   }
   
   return { valido: true };

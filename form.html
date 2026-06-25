@@ -554,7 +554,7 @@
   const MAX_INTENTOS = 100;
   
   // URL del Web App de Google Apps Script (reemplazar con tu URL)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxGnh6NRFbUvsfgf8nNyUyjFWx8gZz0XprDUBrMhvLtXSgAJFaheRyejd6iV7DD1lM7A/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw7yOVo6oTC6ssF1effq0UP9zIK9ALzTFjgx5-arUMNo0pROqzg0kDGL6lP5BTFaeMuQ/exec';
 
   const form = document.getElementById('formConcurso');
   const mensaje = document.getElementById('mensaje');
@@ -959,10 +959,49 @@
   const numeroAlumnosSelect = document.getElementById('numeroAlumnos');
   const inventoresContainer = document.getElementById('inventoresContainer');
 
+  const GRADOS_POR_CATEGORIA = {
+    A: [
+      '4to de primaria',
+      '5to de primaria',
+      '6to de primaria',
+      '1ero de secundaria'
+    ],
+    B: [
+      '2do de secundaria',
+      '3ero de secundaria',
+      '4to de secundaria',
+      '5to de secundaria'
+    ]
+  };
+
+  function obtenerCategoriaSeleccionada() {
+    const categoriaSeleccionada = document.querySelector('input[name="categoriaParticipacion"]:checked');
+    return categoriaSeleccionada ? categoriaSeleccionada.value : null;
+  }
+
+  function obtenerOpcionesGradoPorCategoria() {
+    const categoria = obtenerCategoriaSeleccionada();
+    return GRADOS_POR_CATEGORIA[categoria] || [];
+  }
+
+  function construirOpcionesGrado(opciones, gradoSeleccionado) {
+    let html = '<option value="">Seleccione...</option>';
+
+    opciones.forEach((opcion) => {
+      const selected = opcion === gradoSeleccionado ? ' selected' : '';
+      html += `<option value="${opcion}"${selected}>${opcion}</option>`;
+    });
+
+    return html;
+  }
+
   /**
    * Renderiza el formulario de un inventor
    */
   function crearFormuarioInventor(numero) {
+    const opcionesGrado = obtenerOpcionesGradoPorCategoria();
+    const opcionesGradoHtml = construirOpcionesGrado(opcionesGrado);
+
     const inventorHTML = `
       <div class="inventor-item" data-inventor="${numero}">
         <h5>Alumno ${numero}</h5>
@@ -992,15 +1031,7 @@
           <div class="form-group">
             <label class="required">Grado</label>
             <select class="inventor-grado" data-numero="${numero}" required>
-              <option value="">Seleccione...</option>
-              <option value="4to de primaria">4to de primaria</option>
-              <option value="5to de primaria">5to de primaria</option>
-              <option value="6to de primaria">6to de primaria</option>
-              <option value="1ero de secundaria">1ero de secundaria</option>
-              <option value="2do de secundaria">2do de secundaria</option>
-              <option value="3ero de secundaria">3ero de secundaria</option>
-              <option value="4to de secundaria">4to de secundaria</option>
-              <option value="5to de secundaria">5to de secundaria</option>
+              ${opcionesGradoHtml}
             </select>
           </div>
         </div>
@@ -1021,6 +1052,20 @@
     }
 
     inventoresContainer.innerHTML = html;
+  }
+
+  function actualizarOpcionesGradoInventores() {
+    const opciones = obtenerOpcionesGradoPorCategoria();
+    const selectsGrado = Array.from(inventoresContainer.querySelectorAll('.inventor-grado'));
+
+    selectsGrado.forEach((select) => {
+      const valorActual = select.value;
+      select.innerHTML = construirOpcionesGrado(opciones, valorActual);
+
+      if (valorActual && !opciones.includes(valorActual)) {
+        select.value = '';
+      }
+    });
   }
 
   /**
@@ -1056,6 +1101,7 @@
    */
   function validarInventores() {
     const inventores = obtenerInventores();
+    const gradosPermitidos = obtenerOpcionesGradoPorCategoria();
     
     if (inventores.length === 0) {
       mostrarModal('Debe agregar al menos 1 inventor', 'error');
@@ -1072,6 +1118,10 @@
         mostrarModal('El género de cada inventor debe ser Masculino o Femenino', 'error');
         return false;
       }
+      if (!gradosPermitidos.includes(inventor.grado)) {
+        mostrarModal('El grado seleccionado no corresponde a la categoría de participación', 'error');
+        return false;
+      }
       // Validar edad como número entero positivo
       const edadNum = parseInt(inventor.edad, 10);
       if (isNaN(edadNum) || edadNum <= 0) {
@@ -1086,6 +1136,12 @@
   numeroAlumnosSelect.addEventListener('change', function() {
     const cantidad = parseInt(numeroAlumnosSelect.value, 10);
     renderizarInventores(cantidad);
+  });
+
+  document.querySelectorAll('input[name="categoriaParticipacion"]').forEach((radio) => {
+    radio.addEventListener('change', function() {
+      actualizarOpcionesGradoInventores();
+    });
   });
 
   // Inicializar inventores segun el valor por defecto del selector
@@ -1276,6 +1332,7 @@
         idEnvio: idEnvio,
         titulo: document.getElementById('titulo').value,
         categoriaParticipacion: document.querySelector('input[name="categoriaParticipacion"]:checked') ? document.querySelector('input[name="categoriaParticipacion"]:checked').value : '',
+        numeroAlumnos: document.getElementById('numeroAlumnos').value,
         institucionEducativa: document.getElementById('institucionEducativa').value,
         direccionInstitucion: document.getElementById('direccionInstitucion').value,
         regionInstitucion: document.getElementById('regionInstitucion').value,
