@@ -790,22 +790,6 @@
     return { valido: true };
   }
 
-  /**
-   * Sanitizar datos de entrada
-   */
-  function sanitizarDatos(datos) {
-    const sanitizado = {};
-    for (const [key, value] of Object.entries(datos)) {
-      if (typeof value === 'string') {
-        // Remover caracteres potencialmente peligrosos
-        sanitizado[key] = value.trim().replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-      } else {
-        sanitizado[key] = value;
-      }
-    }
-    return sanitizado;
-  }
-
   // Función para obtener hora formateada
   function obtenerHoraActual() {
     const ahora = new Date();
@@ -1384,9 +1368,6 @@
         token: formularioToken,
         tiempoFormulario: new Date().getTime() - tiempoInicioFormulario
       };
-
-      // Sanitizar datos
-      datos = sanitizarDatos(datos);
 
       // Enviar datos al Apps Script usando no-cors
       fetch(SCRIPT_URL, {
