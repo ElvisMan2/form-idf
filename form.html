@@ -570,13 +570,11 @@
 <script>
 (function() {
   // Variables de seguridad
-  let formularioToken = null;
-  let tiempoInicioFormulario = new Date().getTime();
   let intentosEnvio = 0;
   const MAX_INTENTOS = 100;
   
   // URL del Web App de Google Apps Script (reemplazar con tu URL)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw7yOVo6oTC6ssF1effq0UP9zIK9ALzTFjgx5-arUMNo0pROqzg0kDGL6lP5BTFaeMuQ/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI_efFFMZQa-tmwiG2-IqYexm_1-S1fJQREmoOxZGgJ_O8SrnvxuhoDnhvVde5onli_Q/exec';
 
   const form = document.getElementById('formConcurso');
   const mensaje = document.getElementById('mensaje');
@@ -683,61 +681,9 @@
   }
 
   /**
-   * Obtiene un token del servidor (opcional, no crítico)
-   */
-  async function obtenerToken() {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
-      
-      const response = await fetch(`${SCRIPT_URL}?action=getToken`, {
-        method: 'GET',
-        mode: 'cors',
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          formularioToken = data.token;
-          console.log('Token obtenido exitosamente');
-          return true;
-        }
-      }
-    } catch (error) {
-      // Silenciar el error, el token es opcional
-      console.log('Token no disponible, se continuará sin él');
-      return false;
-    }
-    return false;
-  }
-
-  /**
-   * Genera un token del lado del cliente como alternativa
-   */
-  function generarTokenCliente() {
-    const timestamp = new Date().getTime();
-    const random = Math.random().toString(36).substring(2);
-    return `client_${timestamp}_${random}`;
-  }
-
-  /**
    * Validaciones de seguridad del cliente
    */
   function validacionesSeguridad() {
-    const ahora = new Date().getTime();
-    const tiempoTranscurrido = ahora - tiempoInicioFormulario;
-    
-    // Verificar tiempo mínimo
-    if (tiempoTranscurrido < 30000) { // 30 segundos
-      return {
-        valido: false,
-        mensaje: 'Por favor, tómese más tiempo para completar el formulario correctamente.'
-      };
-    }
-    
     // Verificar intentos de envío
     if (intentosEnvio >= MAX_INTENTOS) {
       return {
@@ -927,17 +873,11 @@
     mostrarModal(texto, tipo);
   }
 
-  // Obtener token al cargar la página (no bloqueante)
   window.addEventListener('load', function() {
     // Verificar cierre del formulario
     if (verificarFormularioFinalizado()) {
       return;
     }
-
-    obtenerToken().catch(() => {
-      // Si falla, generar token del cliente
-      formularioToken = generarTokenCliente();
-    });
   });
 
   // Detectar cambios sospechosos
@@ -1287,11 +1227,6 @@
       return;
     }
 
-    // Si no hay token, generar uno del cliente
-    if (!formularioToken) {
-      formularioToken = generarTokenCliente();
-    }
-
     btnSubmit.disabled = true;
     mostrarModalCargando();
 
@@ -1364,9 +1299,7 @@
         autorizacionContacto: document.querySelector('input[name="autorizacionContacto"]:checked') ? document.querySelector('input[name="autorizacionContacto"]:checked').value : '',
         inventores: obtenerInventores(),
         // Campos de seguridad
-        honeypot: document.getElementById('honeypot').value,
-        token: formularioToken,
-        tiempoFormulario: new Date().getTime() - tiempoInicioFormulario
+        honeypot: document.getElementById('honeypot').value
       };
 
       // Enviar datos al Apps Script usando no-cors
@@ -1395,10 +1328,7 @@
         form.reset();
         
         // Resetear variables de seguridad
-        tiempoInicioFormulario = new Date().getTime();
         intentosEnvio = 0;
-        // Generar nuevo token para próximo envío
-        formularioToken = generarTokenCliente();
       } else {
         throw new Error(resultado.message || 'Error al procesar el formulario');
       }
