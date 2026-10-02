@@ -502,26 +502,26 @@
       </div>
       
       <div class="form-group">
-        <label class="required" for="descripcion">FICHA TÉCNICA DEL PROYECTO</label>
+        <label class="required" for="descripcion">Descripción del proyecto</label>
         <p class="field-help">Describa claramente en qué consiste la invención y qué problema busca resolver que la haga diferente a otros productos/procedimientos, así como su impacto social, económico o comercial.</p>
         <textarea id="descripcion" name="descripcion" rows="5" minlength="300" required></textarea>
       </div>
 
       <div class="form-group">
-        <label class="required" for="fichaPostulante">DECLARACIONES Y ACUERDOS DE PARTE DEL ASESOR</label>
+        <label class="required" for="fichaPostulante">Formato de Postulación</label>
         <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
         <input type="file" id="fichaPostulante" name="fichaPostulante" accept=".doc,.docx,.pdf" required>
       </div>
 
       <div class="form-group">
-        <label class="required" for="fichaInvencion">CONSENTIMIENTO Y DECLARACIONES DEL MADRE/PADRE O TUTOR
+        <label class="required" for="fichaInvencion">Consentimiento y Declaraciones de padres-tutor
 </label>
         <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
         <input type="file" id="fichaInvencion" name="fichaInvencion" accept=".doc,.docx,.pdf" required>
       </div>
 
       <div class="form-group">
-        <label class="required" for="declaracionParteAsesor">Declaración parte asesor</label>
+        <label class="required" for="declaracionParteAsesor">Ficha de Declaraciones y Acuerdos del asesor</label>
         <p class="field-help">Formato word o pdf, tamaño maximo 10 MB</p>
         <input type="file" id="declaracionParteAsesor" name="declaracionParteAsesor" accept=".doc,.docx,.pdf" required>
       </div>
@@ -609,14 +609,13 @@
 
     /**
    * Verifica si el formulario ya finalizó
-   * Fecha límite: 12 de mayo de 2026 - 00:00 hora Lima (Perú)
    */
   function verificarFormularioFinalizado() {
     // Hora Lima Perú (UTC-5)
     const ahora = new Date();
 
     // Fecha límite: 08 de julio 2026 00:00:00 Perú
-    const fechaLimite = new Date('2026-07-09T00:00:00-05:00');
+    const fechaLimite = new Date('2026-10-08T10:00:00-05:00');
     // se pone un dia despues a las
     if (ahora >= fechaLimite) {
       // Ocultar formulario
@@ -986,13 +985,21 @@
       '4to de primaria',
       '5to de primaria',
       '6to de primaria',
-      '1ero de secundaria'
+      '1ero de secundaria',
+      '2do de secundaria',
+      '3ero de secundaria',
+      '4to de secundaria',
+      '5to de secundaria'
     ],
     B: [
       '2do de secundaria',
       '3ero de secundaria',
       '4to de secundaria',
-      '5to de secundaria'
+      '5to de secundaria',
+      '4to de primaria',
+      '5to de primaria',
+      '6to de primaria',
+      '1ero de secundaria'
     ]
   };
 
